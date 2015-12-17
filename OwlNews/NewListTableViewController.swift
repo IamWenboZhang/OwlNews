@@ -48,25 +48,30 @@ class NewListTableViewController: UITableViewController {
     
     //加载新闻信息
     func LoadData(){
-        let url = NSURL(string: APIURL)
-        let loadRequest = NSURLRequest(URL: url!)
-        let loadQueue = NSOperationQueue()
-        NSURLConnection.sendAsynchronousRequest(loadRequest, queue: loadQueue) { (response, data, error) -> Void in
-            let json = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableLeaves , error: nil)as! NSDictionary
-            //解析json并赋值给DatSource
-            let newsDataSourceItem = json["item"] as! NSArray
-            var currentNewsData = [NewsItem]()
+        let url = NSURL(string: APIURL)                     //实例化NSURL对象
+        let loadRequest = NSURLRequest(URL: url!)           //加载请求
+        let loadQueue = NSOperationQueue()                  //加载队列
+        NSURLConnection.sendAsynchronousRequest(loadRequest, queue: loadQueue)
+            {
+                (response, data, error) -> Void in
+                let json = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableLeaves , error: nil)as! NSDictionary
+                //解析json并赋值给DatSource
+                let newsDataSourceItem = json["item"] as! NSArray
+                var currentNewsData = [NewsItem]()
             
-            for currentNews in newsDataSourceItem{
-                let newsItem = NewsItem()
-                newsItem.NewsTitle = currentNews["title"] as! NSString
-                newsItem.NewsID = currentNews["id"] as! NSString
-                newsItem.NewsThumb = currentNews["thumb"] as! NSString
-                currentNewsData.append(newsItem)
-            }
-            self.DataSource = currentNewsData
-            self.loadHeaderInfo()
-            dispatch_async(dispatch_get_main_queue(), {self.tableView.reloadData()})
+                for currentNews in newsDataSourceItem
+                {
+                    let newsItem = NewsItem()
+                    newsItem.NewsTitle = currentNews["title"] as! NSString
+                    newsItem.NewsID = currentNews["id"] as! NSString
+                    newsItem.NewsThumb = currentNews["thumb"] as! NSString
+                    currentNewsData.append(newsItem)
+                }
+           
+                self.DataSource = currentNewsData
+                self.loadHeaderInfo()
+                dispatch_async(dispatch_get_main_queue()
+                    , {self.tableView.reloadData()})
         }
     }
     
@@ -122,7 +127,6 @@ class NewListTableViewController: UITableViewController {
             let image = UIImage(data: data!)
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 cell.imageView!.image = image
-                
             })
         }
         
@@ -134,7 +138,7 @@ class NewListTableViewController: UITableViewController {
         performSegueWithIdentifier("CellPush", sender: self)
     }
     
-    
+    //跳转前为下一个界面的变量赋值
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         //判断是哪个过渡
         if(segue.identifier == "CellPush"){
@@ -147,6 +151,7 @@ class NewListTableViewController: UITableViewController {
         else if(segue.identifier == "HeadLinePush"){
             let webViewController = segue.destinationViewController as! ViewController
             webViewController.DetialID = DataSource[0].NewsID
+    
         }
     }
     

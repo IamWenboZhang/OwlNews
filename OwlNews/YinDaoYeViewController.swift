@@ -42,7 +42,7 @@ class YinDaoYeViewController: UIViewController ,UIScrollViewDelegate{
         scorllViewer.contentSize = CGSizeMake((self.view.frame.width * 4), 0)
         scorllViewer.pagingEnabled = true
         scorllViewer.bounces = false //弹簧力的值
-        scorllViewer.showsHorizontalScrollIndicator = false //不显示水平滑动条
+        scorllViewer.showsHorizontalScrollIndicator = true //不显示水平滑动条
         scorllViewer.delegate = self
         
         for(var i=0;i<4;i++)
